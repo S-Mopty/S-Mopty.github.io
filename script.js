@@ -123,7 +123,7 @@ function initTilt() {
 /* ===== Scroll Reveal ===== */
 function setupReveal() {
   const revealElements = document.querySelectorAll(
-    '.section-title, .section-subtitle, .project-card, .journey-card, .stack-category, .contact-text, .contact-links, .projects-more'
+    '.section-title, .section-subtitle, .featured-project, .project-card, .journey-card, .stack-category, .contact-text, .contact-links, .projects-more'
   );
 
   revealElements.forEach(el => {
