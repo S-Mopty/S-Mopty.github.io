@@ -311,12 +311,14 @@ body:hover .cursor-glow {
   animation-delay: 0.9s;
 }
 
-/* Scroll indicator */
+/* Scroll indicator — centred with margins, since fadeInUp owns `transform` */
 .scroll-indicator {
   position: absolute;
   bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  right: 0;
+  width: fit-content;
+  margin: 0 auto;
   opacity: 0;
   animation: fadeInUp 0.6s ease forwards;
   animation-delay: 1.1s;
@@ -366,6 +368,147 @@ body:hover .cursor-glow {
   color: var(--text-muted);
   font-size: 1rem;
   margin-bottom: 3rem;
+}
+
+/* ===== Featured Project ===== */
+.featured-project {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 2.5rem;
+  align-items: center;
+  background: var(--white);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem;
+  margin: 2rem 0 4rem;
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.4s ease;
+}
+
+.featured-project::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--blue), var(--blue-light));
+}
+
+.featured-project:hover {
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.08);
+}
+
+.featured-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--blue);
+  background: var(--blue-glow);
+  padding: 0.3rem 0.75rem;
+  border-radius: 100px;
+  margin-bottom: 1rem;
+}
+
+.featured-project h3 {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 0.75rem;
+}
+
+.featured-desc {
+  color: var(--text-muted);
+  margin-bottom: 1.25rem;
+}
+
+.featured-points {
+  list-style: none;
+  display: grid;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.featured-points li {
+  position: relative;
+  padding-left: 1.25rem;
+}
+
+.featured-points li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--blue);
+}
+
+.featured-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.75rem;
+}
+
+.featured-tags span {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 100px;
+  color: var(--text-muted);
+}
+
+.featured-link {
+  display: inline-block;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--white);
+  background: var(--blue);
+  padding: 0.75rem 1.5rem;
+  border-radius: 100px;
+  transition: all var(--transition);
+  cursor: none;
+}
+
+.featured-link:hover {
+  background: var(--blue-light);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(26, 58, 107, 0.2);
+}
+
+.featured-visual svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.fv-sea { fill: var(--bg-alt); }
+.fv-land { fill: var(--white); stroke: rgba(26, 58, 107, 0.25); stroke-width: 1.5; }
+.fv-river { fill: none; stroke: rgba(42, 82, 152, 0.35); stroke-width: 2; stroke-linecap: round; }
+.fv-label { fill: var(--white); stroke: rgba(26, 58, 107, 0.45); stroke-width: 1.2; }
+.fv-active { fill: var(--blue); stroke: var(--blue); }
+.fv-pulse { fill: none; stroke: var(--blue-light); stroke-width: 1.5; transform-box: fill-box; transform-origin: center; animation: fvPulse 2.4s ease-out infinite; }
+.fv-panel { fill: var(--white); stroke: rgba(0, 0, 0, 0.08); }
+.fv-text-strong { fill: var(--text); }
+.fv-text { fill: rgba(0, 0, 0, 0.1); }
+.fv-close { stroke: var(--text-muted); stroke-width: 1.5; stroke-linecap: round; }
+.fv-image { fill: var(--blue-light); opacity: 0.25; }
+.fv-mountain { fill: var(--blue); opacity: 0.55; }
+.fv-nav { fill: var(--white); opacity: 0.9; }
+.fv-counter { font-family: var(--font-mono); font-size: 9px; font-weight: 700; fill: var(--text-muted); }
+
+@keyframes fvPulse {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(1.5, 2.4); opacity: 0; }
 }
 
 /* ===== Projects Grid ===== */
@@ -470,6 +613,16 @@ body:hover .cursor-glow {
   display: flex;
   align-items: center;
   gap: 0.25rem;
+}
+
+.projects-status {
+  grid-column: 1 / -1;
+  color: var(--text-muted);
+}
+
+.projects-status a {
+  color: var(--blue);
+  font-weight: 600;
 }
 
 .projects-more {
@@ -660,7 +813,20 @@ body:hover .cursor-glow {
 }
 
 /* ===== Responsive ===== */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
+  .featured-project {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .featured-visual {
+    order: -1;
+  }
+}
+
+/* Native cursor on small screens, and when motion is reduced
+   (the custom one trails the mouse) */
+@media (max-width: 768px), (prefers-reduced-motion: reduce) {
   body {
     cursor: auto;
   }
@@ -670,6 +836,24 @@ body:hover .cursor-glow {
     display: none;
   }
 
+  .hero-link,
+  .featured-link,
+  .project-card,
+  .journey-card,
+  .stack-tag,
+  .contact-link,
+  .projects-more,
+  .nav-links a,
+  .nav-logo {
+    cursor: auto;
+  }
+
+  .lang-toggle {
+    cursor: pointer;
+  }
+}
+
+@media (max-width: 768px) {
   .navbar {
     padding: 1rem 1.5rem;
   }
@@ -718,16 +902,8 @@ body:hover .cursor-glow {
     flex-direction: column;
   }
 
-  .hero-link,
-  .project-card,
-  .journey-card,
-  .stack-tag,
-  .contact-link,
-  .projects-more,
-  .nav-links a,
-  .nav-logo,
-  .lang-toggle {
-    cursor: auto;
+  .featured-project {
+    padding: 1.75rem;
   }
 }
 
@@ -739,4 +915,53 @@ body:hover .cursor-glow {
   .nav-links a:not(:last-child):not(.lang-toggle) {
     display: none;
   }
+}
+
+/* ===== Reduced motion ===== */
+/* Fades stay; anything that travels, loops or follows the mouse goes.
+   Parallax, tilt and smooth scrolling are switched off in script.js. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .hero-blob,
+  .scroll-arrow,
+  .skeleton-line,
+  .fv-pulse {
+    animation: none;
+  }
+
+  .fv-pulse {
+    opacity: 0;
+  }
+
+  .hero-name-line span {
+    transform: none;
+    animation-name: fadeIn;
+    animation-fill-mode: both;
+  }
+
+  .hero-tagline,
+  .hero-links,
+  .hero-lang-toggle,
+  .scroll-indicator {
+    animation-name: fadeIn;
+  }
+
+  .reveal {
+    transform: none;
+  }
+
+  .hero-link:hover,
+  .stack-tag:hover,
+  .contact-link:hover,
+  .featured-link:hover {
+    transform: none;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
