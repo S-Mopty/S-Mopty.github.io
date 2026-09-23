@@ -194,6 +194,8 @@ function i18n(tag, fr, en, attrs = '') {
 /* ===== GitHub Repos ===== */
 const GITHUB_USERNAME = 'S-Mopty';
 const REPO_LIMIT = 6;
+// Not projects: the profile README repo and this site's own repo.
+const HIDDEN_REPOS = [GITHUB_USERNAME, `${GITHUB_USERNAME}.github.io`].map(name => name.toLowerCase());
 
 const langColors = {
   Python: '#3572A5',
@@ -261,7 +263,7 @@ async function loadRepos() {
 
     // Most starred first; the sort is stable, so ties stay in last-updated order.
     const repos = (await response.json())
-      .filter(r => !r.fork && !r.archived)
+      .filter(r => !r.fork && !r.archived && !HIDDEN_REPOS.includes(r.name.toLowerCase()))
       .sort((a, b) => b.stargazers_count - a.stargazers_count)
       .slice(0, REPO_LIMIT);
 
