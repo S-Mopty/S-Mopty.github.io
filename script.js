@@ -193,9 +193,14 @@ function i18n(tag, fr, en, attrs = '') {
 
 /* ===== GitHub Repos ===== */
 const GITHUB_USERNAME = 'S-Mopty';
-const REPO_LIMIT = 6;
-// Not projects: the profile README repo and this site's own repo.
-const HIDDEN_REPOS = [GITHUB_USERNAME, `${GITHUB_USERNAME}.github.io`].map(name => name.toLowerCase());
+// Repos shown, in display order, as "owner/name" (public repos only: a private
+// one can't be read by the API and would 404 for visitors).
+const FEATURED_REPOS = [
+  'A-Jeaugey/PI-THON',
+  'A-Jeaugey/blades-io',
+  'S-Mopty/Emergency-Crew',
+  'S-Mopty/DermaLogic',
+];
 
 const langColors = {
   Python: '#3572A5',
@@ -258,19 +263,16 @@ async function loadRepos() {
   createSkeletons(grid);
 
   try {
-    const response = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`);
-    if (!response.ok) throw new Error(`GitHub API ${response.status}`);
+    // One request per repo; a repo that fails (renamed, made private) is just skipped.
+    const results = await Promise.allSettled(FEATURED_REPOS.map(async (fullName) => {
+      const response = await fetch(`https://api.github.com/repos/${fullName}`);
+      if (!response.ok) throw new Error(`GitHub API ${response.status} for ${fullName}`);
+      return response.json();
+    }));
+    const repos = results.filter(r => r.status === 'fulfilled').map(r => r.value);
+    if (repos.length === 0) throw new Error('No repo could be loaded');
 
-    // Most starred first; the sort is stable, so ties stay in last-updated order.
-    const repos = (await response.json())
-      .filter(r => !r.fork && !r.archived && !HIDDEN_REPOS.includes(r.name.toLowerCase()))
-      .sort((a, b) => b.stargazers_count - a.stargazers_count)
-      .slice(0, REPO_LIMIT);
-
-    grid.innerHTML = repos.length
-      ? ''
-      : `<p class="projects-status">${i18n('span', 'Aucun repo public trouvé.', 'No public repos found.')}</p>`;
-
+    grid.innerHTML = '';
     repos.forEach(repo => grid.appendChild(createRepoCard(repo)));
 
   } catch {
